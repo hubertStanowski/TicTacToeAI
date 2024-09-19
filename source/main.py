@@ -13,7 +13,7 @@ def main() -> None:
     pygame.display.set_caption("TicTacToe AI")
 
     clock = pygame.time.Clock()
-    graph = Graph(10)
+    graph = Graph(GRID_SIZES["large"])
     turn = random.choice([X, O])
     cooldown = CLICK_COOLDOWN
 
@@ -32,15 +32,13 @@ def main() -> None:
 
                 if graph.is_valid_node(row, col) and cooldown >= CLICK_COOLDOWN:
                     cooldown = 0
-                    node = graph.grid[row][col]
-                    if node.is_empty():
+                    if graph.is_empty(row, col):
                         if turn == X:
-                            node.set_x()
+                            graph.set_x(row, col)
                             turn = O
                         else:
-                            node.set_o()
+                            graph.set_o(row, col)
                             turn = X
-                        node.draw(window)
 
         pygame.display.update()
 
