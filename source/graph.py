@@ -1,6 +1,8 @@
 from constants import *
 
+from copy import deepcopy
 import pygame
+
 
 EMPTY = ""
 X = "X"
@@ -46,6 +48,11 @@ class Graph:
 
                 pygame.draw.line(window, GRID_COLOR, (x, y + self.node_size),
                                  (x + self.node_size, y + self.node_size))
+
+    def clone(self) -> 'Graph':
+        clone = Graph(self.size)
+        clone.grid = deepcopy(self.grid)
+        return clone
 
     def get_grid_pos(self, pos):
         """
