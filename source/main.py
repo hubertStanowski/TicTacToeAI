@@ -39,8 +39,8 @@ def main() -> None:
                             game.graph.set_x(row, col)
                         else:
                             game.graph.set_o(row, col)
-            # if event.type == pygame.KEYDOWN and (event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE):
-            #     game.reset()
+            if event.type == pygame.KEYDOWN and (event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE):
+                game.reset()
 
         pygame.display.update()
 

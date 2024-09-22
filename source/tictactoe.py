@@ -7,9 +7,9 @@ class TicTacToe:
         self.size = size
         self.graph = Graph(size)
 
-    # def reset(self, new_size=None) -> None:
-    #     self.size = self.size if new_size is None else new_size
-    #     self.graph = Graph(self.size)
+    def reset(self, new_size=None) -> None:
+        self.size = self.size if new_size is None else new_size
+        self.graph = Graph(self.size)
 
     def player(self) -> str:
         """
