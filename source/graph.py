@@ -64,6 +64,11 @@ class Graph:
 
         return row, col
 
+    def is_full(self) -> bool:
+        empty_count = sum([row.count(EMPTY) for row in self.grid])
+
+        return empty_count == 0
+
     def is_valid_node(self, row, col, offset=0):
         return offset <= row < (self.size - offset) and offset <= col < (self.size - offset)
 

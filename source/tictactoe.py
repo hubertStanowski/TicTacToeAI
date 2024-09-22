@@ -7,6 +7,10 @@ class TicTacToe:
         self.size = size
         self.graph = Graph(size)
 
+    # def reset(self, new_size=None) -> None:
+    #     self.size = self.size if new_size is None else new_size
+    #     self.graph = Graph(self.size)
+
     def player(self) -> str:
         """
         Returns the player who has the next move.
@@ -30,10 +34,11 @@ class TicTacToe:
 
         return possible
 
-    def make_move(self, action) -> Graph:
+    def result(self, action) -> Graph:
         """
-        Returns the state of the boar
+        Returns the board that results from making move (row, col) on the board.
         """
+
         if action not in self.actions():
             return
 
@@ -43,7 +48,7 @@ class TicTacToe:
 
         return new_state
 
-    def winner(self, board):
+    def winner(self):
         """
         Returns the winner of the game, if there is one.
         """
@@ -55,9 +60,10 @@ class TicTacToe:
 
             return True
 
-        possible = [row for row in board] + [list(col) for col in zip(*board)]
-        possible += [[board[i][i]
-                      for i in range(self.size)]] + [[board[i][self.size-1-i] for i in range(self.size)]]
+        possible = [row for row in self.graph.grid] + \
+            [list(col) for col in zip(*self.graph.grid)]
+        possible += [[self.graph.grid[i][i]
+                      for i in range(self.size)]] + [[self.graph.grid[i][self.size-1-i] for i in range(self.size)]]
 
         for player in (X, O):
             for option in possible:
@@ -65,3 +71,13 @@ class TicTacToe:
                     return player
 
         return None
+
+    def terminal(self):
+        """
+        Returns True if game is over, False otherwise.
+        """
+
+        if not self.graph.is_full():
+            return self.winner() is not None
+
+        return True

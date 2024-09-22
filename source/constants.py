@@ -13,6 +13,8 @@ CLICK_COOLDOWN = FPS // 10
 # Font
 FONT = None
 
+RESULT_FONT_SIZE = 200
+
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
