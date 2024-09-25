@@ -1,8 +1,12 @@
 from constants import *
 from graph import *
+from buttons import initialize_buttons
 from tictactoe import *
 
 import pygame
+
+# TODO add buttons to select which player is human
+# TODO and then start the game against ai
 
 
 def main() -> None:
@@ -14,6 +18,7 @@ def main() -> None:
 
     clock = pygame.time.Clock()
     game = TicTacToe(GRID_SIZES["small"])
+    buttons = initialize_buttons()
     cooldown = CLICK_COOLDOWN
 
     while True:
@@ -21,6 +26,9 @@ def main() -> None:
         cooldown += 1
         clock.tick(FPS)
         window.fill(BACKGROUND_COLOR)
+        for button in buttons.values():
+            button.draw(window)
+
         game.graph.draw(window)
         if game.terminal():
             display_result(window, game)
@@ -28,8 +36,11 @@ def main() -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-            if pygame.mouse.get_pressed()[0]:
+            elif pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
+                for label, button in buttons.items():
+                    if button.clicked(pos):
+                        button.select()
                 col, row = game.graph.get_grid_pos(pos)
 
                 if game.graph.is_valid_node(row, col) and cooldown >= CLICK_COOLDOWN and not game.terminal():
@@ -39,7 +50,7 @@ def main() -> None:
                             game.graph.set_x(row, col)
                         else:
                             game.graph.set_o(row, col)
-            if event.type == pygame.KEYDOWN and (event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE):
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE):
                 game.reset()
 
         pygame.display.update()
