@@ -1,4 +1,5 @@
 from constants import *
+from graph import X, O
 
 import pygame
 
@@ -35,9 +36,10 @@ class Button:
 def initialize_buttons() -> dict[int | str, Button]:
     buttons = {}
 
-    x = LEFT_MARGIN + GAME_SIZE + (RIGHT_MARGIN - BUTTON_WIDTH) // 2
-    y = TOP_MARGIN + 50
+    x = (WINDOW_WIDTH - BUTTON_WIDTH) // 2
+    y = WINDOW_HEIGHT // 6 - 50
 
-    buttons["ai_move"] = Button("AI move", x, y)
+    buttons[X] = Button("Play as X", x-0.75*BUTTON_WIDTH, y)
+    buttons[O] = Button("Play as Y", x+0.75*BUTTON_WIDTH, y)
 
     return buttons

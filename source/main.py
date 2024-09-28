@@ -18,6 +18,7 @@ def main() -> None:
 
     clock = pygame.time.Clock()
     game = TicTacToe(GRID_SIZES["small"])
+    human_player = None
     buttons = initialize_buttons()
     cooldown = CLICK_COOLDOWN
 
@@ -26,32 +27,38 @@ def main() -> None:
         cooldown += 1
         clock.tick(FPS)
         window.fill(BACKGROUND_COLOR)
-        for button in buttons.values():
-            button.draw(window)
 
-        game.graph.draw(window)
-        if game.terminal():
-            display_result(window, game)
+        if human_player:
+            game.graph.draw(window)
+            if game.terminal():
+                display_result(window, game)
+        else:
+            for button in buttons.values():
+                button.draw(window)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
             elif pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
-                for label, button in buttons.items():
-                    if button.clicked(pos):
-                        button.select()
-                col, row = game.graph.get_grid_pos(pos)
+                if not human_player:
+                    for label, button in buttons.items():
+                        if button.clicked(pos):
+                            button.select()
+                            human_player = label
+                else:
+                    col, row = game.graph.get_grid_pos(pos)
 
-                if game.graph.is_valid_node(row, col) and cooldown >= CLICK_COOLDOWN and not game.terminal():
-                    cooldown = 0
-                    if game.graph.is_empty(row, col):
-                        if turn == X:
-                            game.graph.set_x(row, col)
-                        else:
-                            game.graph.set_o(row, col)
+                    if game.graph.is_valid_node(row, col) and cooldown >= CLICK_COOLDOWN and not game.terminal():
+                        cooldown = 0
+                        if game.graph.is_empty(row, col):
+                            if turn == X:
+                                game.graph.set_x(row, col)
+                            else:
+                                game.graph.set_o(row, col)
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE):
                 game.reset()
+                human_player = None
 
         pygame.display.update()
 
@@ -65,7 +72,7 @@ def display_result(window, game) -> None:
 
     font = pygame.font.SysFont(FONT, RESULT_FONT_SIZE)
     label = font.render(text, True, WHITE)
-    label_rect = label.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 5))
+    label_rect = label.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 6))
 
     window.blit(label, label_rect)
 
