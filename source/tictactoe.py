@@ -1,11 +1,19 @@
 from constants import *
 from graph import *
 
+import math
+
 
 class TicTacToe:
     def __init__(self, size) -> None:
         self.size = size
         self.graph = Graph(size)
+
+    def clone(self) -> 'TicTacToe':
+        clone = TicTacToe(self.size)
+        clone.graph = self.graph.clone()
+
+        return clone
 
     def reset(self, new_size=None) -> None:
         self.size = self.size if new_size is None else new_size
@@ -34,7 +42,7 @@ class TicTacToe:
 
         return possible
 
-    def result(self, action) -> Graph:
+    def result(self, action) -> 'TicTacToe':
         """
         Returns the board that results from making move (row, col) on the board.
         """
@@ -43,8 +51,9 @@ class TicTacToe:
             return
 
         row, col = action
-        new_state = self.graph.clone()
-        new_state[row][col] = self.player()
+        new_state = self.clone()
+
+        new_state.graph.grid[row][col] = self.player()
 
         return new_state
 
@@ -81,3 +90,60 @@ class TicTacToe:
             return self.winner() is not None
 
         return True
+
+    def utility(self):
+        """
+        Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
+        """
+
+        result = self.winner()
+
+        if result == X:
+            return 1
+        elif result == O:
+            return -1
+        else:
+            return 0
+
+    def minimize(self):
+        v = math.inf
+        if self.terminal():
+            return self.utility(), None
+
+        for action in self.actions():
+            new_val, _ = self.result(action).maximize()
+            if new_val < v:
+                v = new_val
+                picked = action
+
+                if v == -1:
+                    return v, picked
+
+        return v, picked
+
+    def maximize(self):
+        v = -math.inf
+        if self.terminal():
+            return self.utility(), None
+
+        for action in self.actions():
+            new_val, _ = self.result(action).minimize()
+            if new_val > v:
+                v = new_val
+                picked = action
+
+                if v == 1:
+                    return v, picked
+
+        return v, picked
+
+    def minimax(self):
+        """
+        Returns the optimal action for the current player on the board.
+        """
+        if self.player() == X:
+            _, picked = self.maximize()
+        else:
+            _, picked = self.minimize()
+
+        return picked

@@ -5,9 +5,6 @@ from tictactoe import *
 
 import pygame
 
-# TODO add buttons to select which player is human
-# TODO and then start the game against ai
-
 
 def main() -> None:
     pygame.init()
@@ -20,11 +17,9 @@ def main() -> None:
     game = TicTacToe(GRID_SIZES["small"])
     human_player = None
     buttons = initialize_buttons()
-    cooldown = CLICK_COOLDOWN
 
     while True:
         turn = game.player()
-        cooldown += 1
         clock.tick(FPS)
         window.fill(BACKGROUND_COLOR)
 
@@ -36,6 +31,13 @@ def main() -> None:
             for button in buttons.values():
                 button.draw(window)
 
+        if human_player:
+            if turn != human_player and not game.terminal():
+                pygame.display.update()
+                pygame.time.delay(500)
+                move = game.minimax()
+                game = game.result(move)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -44,19 +46,17 @@ def main() -> None:
                 if not human_player:
                     for label, button in buttons.items():
                         if button.clicked(pos):
-                            button.select()
                             human_player = label
                 else:
                     col, row = game.graph.get_grid_pos(pos)
 
-                    if game.graph.is_valid_node(row, col) and cooldown >= CLICK_COOLDOWN and not game.terminal():
-                        cooldown = 0
+                    if game.graph.is_valid_node(row, col) and not game.terminal():
                         if game.graph.is_empty(row, col):
                             if turn == X:
                                 game.graph.set_x(row, col)
                             else:
                                 game.graph.set_o(row, col)
-            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE):
+            elif event.type == pygame.KEYDOWN:
                 game.reset()
                 human_player = None
 

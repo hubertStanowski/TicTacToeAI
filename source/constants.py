@@ -10,8 +10,8 @@ WINDOW_HEIGHT = GAME_SIZE + BOTTOM_MARGIN + TOP_MARGIN
 BUTTON_WIDTH = 200
 BUTTON_HEIGHT = 80
 
-FPS = 60
-CLICK_COOLDOWN = FPS // 10
+FPS = 0
+CLICK_COOLDOWN = 6
 
 # Font
 FONT = None
@@ -27,6 +27,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 
+# Minimax won't work on sizes other than small
 GRID_SIZES = {
     "small": 3,
     "medium": 5,

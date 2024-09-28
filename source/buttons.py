@@ -40,6 +40,6 @@ def initialize_buttons() -> dict[int | str, Button]:
     y = WINDOW_HEIGHT // 6 - 50
 
     buttons[X] = Button("Play as X", x-0.75*BUTTON_WIDTH, y)
-    buttons[O] = Button("Play as Y", x+0.75*BUTTON_WIDTH, y)
+    buttons[O] = Button("Play as O", x+0.75*BUTTON_WIDTH, y)
 
     return buttons
