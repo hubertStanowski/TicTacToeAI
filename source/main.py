@@ -14,7 +14,7 @@ def main() -> None:
     pygame.display.set_caption("TicTacToe AI")
 
     clock = pygame.time.Clock()
-    game = TicTacToe(GRID_SIZES["small"])
+    game = TicTacToe(GRID_SIZE)
     human_player = None
     buttons = initialize_buttons()
 
@@ -31,6 +31,7 @@ def main() -> None:
             for button in buttons.values():
                 button.draw(window)
 
+        # AI Move
         if human_player:
             if turn != human_player and not game.terminal():
                 pygame.display.update()
@@ -49,13 +50,8 @@ def main() -> None:
                             human_player = label
                 else:
                     col, row = game.graph.get_grid_pos(pos)
-
-                    if game.graph.is_valid_node(row, col) and not game.terminal():
-                        if game.graph.is_empty(row, col):
-                            if turn == X:
-                                game.graph.set_x(row, col)
-                            else:
-                                game.graph.set_o(row, col)
+                    if (row, col) in game.actions() and not game.terminal():
+                        game.graph.grid[row][col] = turn
             elif event.type == pygame.KEYDOWN:
                 game.reset()
                 human_player = None
@@ -64,28 +60,16 @@ def main() -> None:
 
 
 def display_result(window, game) -> None:
-    winner = game.winner()
-    if not winner:
+    if not game.winner():
         text = "Draw"
     else:
-        text = f"{winner} won!"
+        text = "AI won!"
 
     font = pygame.font.SysFont(FONT, RESULT_FONT_SIZE)
     label = font.render(text, True, WHITE)
     label_rect = label.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 6))
 
     window.blit(label, label_rect)
-
-
-# def display_reset(window: pygame.Surface) -> None:
-#     font = pygame.font.SysFont(FONT, RESET_FONT_SIZE)
-#     label = font.render("RESET", True, RED)
-#     label_rect = label.get_rect(
-#         center=((2*LEFT_MARGIN + GAME_SIZE) // 2, WINDOW_HEIGHT // 2.3))
-
-#     window.blit(label, label_rect)
-#     pygame.display.update()
-#     pygame.time.delay(1000)
 
 
 if __name__ == "__main__":

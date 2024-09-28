@@ -4,11 +4,6 @@ from copy import deepcopy
 import pygame
 
 
-EMPTY = ""
-X = "X"
-O = "O"
-
-
 class Graph:
     def __init__(self, size) -> None:
         self.size = size

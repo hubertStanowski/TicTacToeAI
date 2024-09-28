@@ -1,5 +1,4 @@
 from constants import *
-from graph import X, O
 
 import pygame
 
